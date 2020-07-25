@@ -429,10 +429,10 @@ class MashovBot extends Bot{
     }
 
     public function createBot($creatorId, $name){
-        $this->DBConn->query("INSERT INTO `botMashov`.`BotsData` (`bot_id`, `token`, `username`, `creator`, `time`) VALUES ('".$this->BotId."', '".$this->BotToken."', '".$this->BotUserName."', '".$creatorId."', CURRENT_TIMESTAMP);");
+        $this->DBConn->query("INSERT INTO `" . (DB['dbname'] ?? "botMashov") . "`.`BotsData` (`bot_id`, `token`, `username`, `creator`, `time`) VALUES ('".$this->BotId."', '".$this->BotToken."', '".$this->BotUserName."', '".$creatorId."', CURRENT_TIMESTAMP);");
 
-        //$this->DBConn->query("DROP TABLE IF EXISTS `botMashov`.`".$this->DBPerfix."users`;");
-        $this->DBConn->query("CREATE TABLE IF NOT EXISTS `botMashov`.`".$this->DBPerfix."users` ( 
+        //$this->DBConn->query("DROP TABLE IF EXISTS `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users`;");
+        $this->DBConn->query("CREATE TABLE IF NOT EXISTS `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` ( 
                 `id` INT NOT NULL AUTO_INCREMENT , 
                 `tg_id` INT NOT NULL ,
                 `name` TEXT NOT NULL ,
@@ -442,8 +442,8 @@ class MashovBot extends Bot{
                 
                 PRIMARY KEY (`id`)) ENGINE = InnoDB;");
         
-        //$this->DBConn->query("DROP TABLE IF EXISTS `botMashov`.`".$this->DBPerfix."message`;");
-        $this->DBConn->query("CREATE TABLE IF NOT EXISTS `botMashov`.`".$this->DBPerfix."message` ( 
+        //$this->DBConn->query("DROP TABLE IF EXISTS `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."message`;");
+        $this->DBConn->query("CREATE TABLE IF NOT EXISTS `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."message` ( 
                 `message_id` INT(100) NOT NULL , 
                 `type` TEXT NOT NULL , 
                 `value` JSON NOT NULL , 
@@ -455,23 +455,23 @@ class MashovBot extends Bot{
                 PRIMARY KEY (`message_id`)) ENGINE = InnoDB;");
                 
                 
-        $this->DBConn->query("DROP TABLE IF EXISTS `botMashov`.`".$this->DBPerfix."data`;");
-        $this->DBConn->query("CREATE TABLE `botMashov`.`".$this->DBPerfix."data` (
+        $this->DBConn->query("DROP TABLE IF EXISTS `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."data`;");
+        $this->DBConn->query("CREATE TABLE `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."data` (
                 `name` VARCHAR(250) NOT NULL ,
                 `value` TEXT NOT NULL ,
                 
                 PRIMARY KEY (`name`)) ENGINE = InnoDB;");
                 
                 
-        $this->DBConn->query('INSERT INTO `botMashov`.`'.$this->DBPerfix.'data` (`name`, `value`)
+        $this->DBConn->query('INSERT INTO `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'data` (`name`, `value`)
                 VALUES ("token", "'.$this->BotToken.'");');
-        $this->DBConn->query('INSERT INTO `botMashov`.`'.$this->DBPerfix.'data` (`name`, `value`)
+        $this->DBConn->query('INSERT INTO `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'data` (`name`, `value`)
                 VALUES ("Creator_id", '.$creatorId.');');
-        $this->DBConn->query('INSERT INTO `botMashov`.`'.$this->DBPerfix.'data` (`name`, `value`)
+        $this->DBConn->query('INSERT INTO `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'data` (`name`, `value`)
                 VALUES ("credit", "yes");');
-        $this->DBConn->query('INSERT INTO `botMashov`.`'.$this->DBPerfix.'data` (`name`, `value`)
+        $this->DBConn->query('INSERT INTO `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'data` (`name`, `value`)
                 VALUES ("group_id", "");');
-        $this->DBConn->query('INSERT INTO `botMashov`.`'.$this->DBPerfix.'data` (`name`, `value`)
+        $this->DBConn->query('INSERT INTO `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'data` (`name`, `value`)
                 VALUES ("StartMessage", "");');
         
         $this->setGroupID("");
@@ -501,30 +501,30 @@ class MashovBot extends Bot{
     }
     
     public function startMesCredit(){
-        $results = $this->DBConn->query("SELECT `value` FROM `botMashov`.`".$this->DBPerfix."data` WHERE `name` = 'credit'");
+        $results = $this->DBConn->query("SELECT `value` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."data` WHERE `name` = 'credit'");
         return $results->fetch_array()['value'];
     }
     
     public function setStartMessage($val){
-        $this->DBConn->query('UPDATE `botMashov`.`'.$this->DBPerfix.'data` SET `value` = "'.$this->DBConn->real_escape_string($val).'"
+        $this->DBConn->query('UPDATE `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'data` SET `value` = "'.$this->DBConn->real_escape_string($val).'"
                 WHERE `name` = "StartMessage";');
     }
     public function getStartMessage(){
-        $results = $this->DBConn->query("SELECT `value` FROM `botMashov`.`".$this->DBPerfix."data` WHERE `name` = 'StartMessage'");
+        $results = $this->DBConn->query("SELECT `value` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."data` WHERE `name` = 'StartMessage'");
         return $results->fetch_array()['value'];
     }
     
     public function setGroupID($val){
-        $this->DBConn->query('UPDATE `botMashov`.`'.$this->DBPerfix.'data` SET `value` = "'.$this->DBConn->real_escape_string($val).'"
+        $this->DBConn->query('UPDATE `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'data` SET `value` = "'.$this->DBConn->real_escape_string($val).'"
                 WHERE `name` = "group_id";');
     }
     public function getGroupID(){
-        $results = $this->DBConn->query("SELECT `value` FROM `botMashov`.`".$this->DBPerfix."data` WHERE `name` = 'group_id'");
+        $results = $this->DBConn->query("SELECT `value` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."data` WHERE `name` = 'group_id'");
         return $results->fetch_array()['value'];
     }
     
     public function getCreatorID(){
-        $results = $this->DBConn->query("SELECT `value` FROM `botMashov`.`".$this->DBPerfix."data` WHERE `name` = 'Creator_id'");
+        $results = $this->DBConn->query("SELECT `value` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."data` WHERE `name` = 'Creator_id'");
         return $results->fetch_array()['value'];
     }
     
@@ -534,13 +534,13 @@ class MashovBot extends Bot{
             $this->logging($update, false, "Update input:", true);
         
         if($type == "edited"){
-            $results = $this->DBConn->query("SELECT `type` FROM `botMashov`.`".$this->DBPerfix."message` WHERE `message_id` = '".$messageId."'");
+            $results = $this->DBConn->query("SELECT `type` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."message` WHERE `message_id` = '".$messageId."'");
             $type =  $results->fetch_array()['type'];
 
             $value = array($type => $value);
-            $this->DBConn->query("UPDATE `botMashov`.`".$this->DBPerfix."message` SET 
+            $this->DBConn->query("UPDATE `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."message` SET 
             `value` = '".$this->DBConn->real_escape_string(json_encode($value))."', `is_edit` = 1
-            WHERE `botMashov`.`".$this->DBPerfix."message`.`message_id` = '".$messageId."';");
+            WHERE `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."message`.`message_id` = '".$messageId."';");
         }
         else{
             /*if(isset($update['message']['text'])){
@@ -554,21 +554,21 @@ class MashovBot extends Bot{
             
             $value = array($type => $value);
             
-            $this->DBConn->query("INSERT INTO `botMashov`.`".$this->DBPerfix."message` 
+            $this->DBConn->query("INSERT INTO `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."message` 
                     (`message_id`, `type`, `value`, `chat_id`, `from_id`, `to_id`, `is_edit`) VALUES 
                     (".$messageId.", '".$type."', '".$this->DBConn->real_escape_string(json_encode($value))."', '".$chatId."', '".$fromID."', '".json_encode($toID)."', 0);");
         }
     }
     
     public function isAdmin($id){
-        $results = $this->DBConn->query("SELECT `admin` FROM `botMashov`.`".$this->DBPerfix."users` WHERE `tg_id` = '".$id."'");
+        $results = $this->DBConn->query("SELECT `admin` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `tg_id` = '".$id."'");
         return $results->fetch_array()['admin'];
     }
     public function setAdmin($id, $mode){
-        $this->DBConn->query('UPDATE `botMashov`.`'.$this->DBPerfix.'users` SET `admin` = '.$mode.' WHERE `tg_id` = '.$id.';');
+        $this->DBConn->query('UPDATE `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'users` SET `admin` = '.$mode.' WHERE `tg_id` = '.$id.';');
     }
     public function getAdminIDS(){
-        $result = $this->DBConn->query("SELECT `tg_id` FROM `botMashov`.`".$this->DBPerfix."users` WHERE `admin` = 1");
+        $result = $this->DBConn->query("SELECT `tg_id` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `admin` = 1");
         $admins = array();
         while ($row = $result->fetch_assoc()) {
             $admins[] = $row['tg_id'];
@@ -578,14 +578,14 @@ class MashovBot extends Bot{
     }
     
     public function isBlocked($id){
-        $results = $this->DBConn->query("SELECT `blocked` FROM `botMashov`.`".$this->DBPerfix."users` WHERE `tg_id` = '".$id."'");
+        $results = $this->DBConn->query("SELECT `blocked` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `tg_id` = '".$id."'");
         return $results->fetch_array()['blocked'];
     }
     public function blockUser($id, $mode){
-        $this->DBConn->query('UPDATE `botMashov`.`'.$this->DBPerfix.'users` SET `blocked` = '.$mode.' WHERE `tg_id` = '.$id.';');
+        $this->DBConn->query('UPDATE `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'users` SET `blocked` = '.$mode.' WHERE `tg_id` = '.$id.';');
     }
     public function getBlockedIDS(){
-        $result = $this->DBConn->query("SELECT `tg_id` FROM `botMashov`.`".$this->DBPerfix."users` WHERE `blocked` = 1");
+        $result = $this->DBConn->query("SELECT `tg_id` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `blocked` = 1");
         $blocks = array();
         while ($row = $result->fetch_assoc()) {
             $blocks[] = $row['tg_id'];
@@ -595,20 +595,20 @@ class MashovBot extends Bot{
     }
     
     public function getToIdByMessageId($messageId){
-        $results = $this->DBConn->query("SELECT `to_id` FROM `botMashov`.`".$this->DBPerfix."message` WHERE `message_id` = '".$messageId."'");
+        $results = $this->DBConn->query("SELECT `to_id` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."message` WHERE `message_id` = '".$messageId."'");
         return json_decode($results->fetch_array()['to_id'], true);
     }
     
     public function isTgBlocked($id){
-        $results = $this->DBConn->query("SELECT `tg_block` FROM `botMashov`.`".$this->DBPerfix."users` WHERE `tg_id` = '".$id."'");
+        $results = $this->DBConn->query("SELECT `tg_block` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `tg_id` = '".$id."'");
         return $results->fetch_array()['tg_block'];
     }
     public function tgBlockUser($id, $mode){
-        $this->DBConn->query('UPDATE `botMashov`.`'.$this->DBPerfix.'users` SET `tg_block` = '.$mode.' WHERE `tg_id` = '.$id.';');
+        $this->DBConn->query('UPDATE `' . (DB['dbname'] ?? "botMashov") . '`.`'.$this->DBPerfix.'users` SET `tg_block` = '.$mode.' WHERE `tg_id` = '.$id.';');
     }
 
     public function sendUsersList($chatId){
-        $result = $this->DBConn->query("SELECT * FROM `botMashov`.`".$this->DBPerfix."users`");
+        $result = $this->DBConn->query("SELECT * FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users`");
         
         $i = 1;
         $text = "רשימת משתמשים:\n";
@@ -649,7 +649,7 @@ class MashovBot extends Bot{
         }
     }
     public function sendActiveUsersList($chatId){
-        $result = $this->DBConn->query("SELECT * FROM `botMashov`.`".$this->DBPerfix."users` WHERE `blocked` != 1 AND `tg_block` != 1;");
+        $result = $this->DBConn->query("SELECT * FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `blocked` != 1 AND `tg_block` != 1;");
         
         $i = 1;
         $text = "רשימת המשתמשים הפעילים:\n";
@@ -684,7 +684,7 @@ class MashovBot extends Bot{
         }
     }
     public function sendCountsUser($chatId){
-        $result = $this->DBConn->query("SELECT * FROM `botMashov`.`".$this->DBPerfix."users`");
+        $result = $this->DBConn->query("SELECT * FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users`");
         
         $counts = 0;
         $admins = 0;
@@ -711,7 +711,7 @@ class MashovBot extends Bot{
         $this->sendMessage($chatId, $text);
     }
     public function sendAdminsList($chatId){
-        $result = $this->DBConn->query("SELECT * FROM `botMashov`.`".$this->DBPerfix."users` WHERE `admin` = 1");
+        $result = $this->DBConn->query("SELECT * FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `admin` = 1");
         
         $i = 1;
         $text = "רשימת מנהלים:\n";
@@ -745,7 +745,7 @@ class MashovBot extends Bot{
         }
     }
     public function sendBlockList($chatId){
-        $result = $this->DBConn->query("SELECT * FROM `botMashov`.`".$this->DBPerfix."users` WHERE `blocked` = 1");
+        $result = $this->DBConn->query("SELECT * FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `blocked` = 1");
         
         $i = 1;
         $text = "רשימת חסומים:\n";
@@ -792,7 +792,7 @@ class MashovBot extends Bot{
         elseif($admins === true){
             $add .= " AND `admin` = '1'";
         }
-        $result = $this->DBConn->query("SELECT `tg_id` FROM `botMashov`.`".$this->DBPerfix."users` WHERE `tg_block` = '0' {$add}");
+        $result = $this->DBConn->query("SELECT `tg_id` FROM `" . (DB['dbname'] ?? "botMashov") . "`.`".$this->DBPerfix."users` WHERE `tg_block` = '0' {$add}");
         return $result->fetch_all();
     }
 }
